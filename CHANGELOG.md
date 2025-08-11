@@ -6,3 +6,4 @@
 - Fixed memory leak in processor (2025-08-05)
 - Added new configuration options (2025-08-07)
 - Improved logging and monitoring (2025-08-11)
+- Fixed Unicode handling for AZ/RU text (2025-08-11)
