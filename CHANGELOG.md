@@ -14,3 +14,4 @@
 - Added data export functionality (2025-08-25)
 - Fixed date parsing edge cases (2025-08-25)
 - Fixed edge case in data validation (2025-08-26)
+- Improved error handling for malformed input (2025-08-26)
