@@ -26,3 +26,4 @@
 - Added rate limiting (2025-09-14)
 - Fixed concurrent access issue (2025-09-22)
 - Improved test coverage (2025-09-22)
+- Added data export functionality (2025-09-24)
