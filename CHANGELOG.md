@@ -84,3 +84,4 @@
 - Fixed Unicode handling for AZ/RU text (2026-01-16)
 - Updated API response format (2026-01-22)
 - Added rate limiting (2026-01-22)
+- Fixed concurrent access issue (2026-01-26)
