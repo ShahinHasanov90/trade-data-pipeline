@@ -85,3 +85,4 @@
 - Updated API response format (2026-01-22)
 - Added rate limiting (2026-01-22)
 - Fixed concurrent access issue (2026-01-26)
+- Improved test coverage (2026-01-28)
