@@ -96,3 +96,4 @@
 - Fixed memory leak in processor (2026-02-11)
 - Added new configuration options (2026-02-11)
 - Improved logging and monitoring (2026-02-20)
+- Fixed Unicode handling for AZ/RU text (2026-02-20)
