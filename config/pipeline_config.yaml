@@ -1,0 +1,95 @@
+# =============================================================================
+# ETL Pipeline Configuration
+# =============================================================================
+# This file defines a sample pipeline for processing customs import
+# declarations. Override any value with environment variables using
+# the ETL_<SECTION>__<KEY> pattern.
+
+pipeline:
+  name: customs-import-pipeline
+  batch_size: 10000
+  max_retries: 3
+  retry_delay_seconds: 2.0
+  parallel_extraction: true
+  max_workers: 4
+  fail_fast: false
+  error_threshold: 0.05
+
+database:
+  connection_string: "postgresql://etl_user:${DB_PASSWORD}@localhost:5432/trade_db"
+  pool_size: 10
+  max_overflow: 20
+  pool_timeout: 30
+  echo: false
+
+monitoring:
+  log_level: INFO
+  log_format: json
+  enable_timing: true
+  enable_record_counts: true
+  metrics_export_path: null
+
+# -- Extractor stages --------------------------------------------------------
+extractors:
+  - type: csv
+    file_path: data/customs_declarations_2024.csv
+    delimiter: ","
+    encoding: utf-8
+    extra:
+      dtype_overrides:
+        hs_code: str
+        declaration_id: str
+
+  - type: csv
+    file_path: data/customs_declarations_2024_q2.csv
+    delimiter: ","
+    encoding: utf-8
+
+# -- Transformer stages ------------------------------------------------------
+transformers:
+  - type: validation
+    rules:
+      declaration_id:
+        required: true
+        type: str
+        min_length: 5
+        max_length: 20
+      hs_code:
+        required: true
+        pattern: "^\\d{6,10}$"
+      declared_value:
+        required: true
+        type: float
+        min: 0
+        max: 999999999
+      weight_kg:
+        required: false
+        type: float
+        min: 0
+      country_origin:
+        required: true
+        min_length: 2
+        max_length: 50
+      currency:
+        required: true
+        allowed: ["USD", "EUR", "GBP", "AZN", "TRY", "RUB", "CNY", "JPY"]
+
+  - type: enrichment
+    extra:
+      enrich_hs_codes: true
+      normalize_countries: true
+      hs_code_column: hs_code
+      country_columns:
+        - country_origin
+        - country_destination
+
+# -- Loader stages -----------------------------------------------------------
+loaders:
+  - type: postgres
+    table_name: customs_declarations
+    conflict_columns:
+      - declaration_id
+    upsert: true
+    extra:
+      schema: public
+      create_table: false
