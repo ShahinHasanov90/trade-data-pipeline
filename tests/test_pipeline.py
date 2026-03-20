@@ -218,7 +218,7 @@ class TestPipelineRejection:
 
     def test_rejected_records_counted(self, sample_df: pd.DataFrame) -> None:
         loader = InMemoryLoader()
-        p = Pipeline(name="reject-test")
+        p = Pipeline(name="reject-test", error_threshold=0.5)
         p.add_extractor(FakeExtractor(sample_df))
         p.add_transformer(RejectingTransformer(reject_count=2))
         p.add_loader(loader)
